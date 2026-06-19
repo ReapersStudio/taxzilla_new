@@ -69,11 +69,12 @@ export type Submission = {
   photoFile: string | null;
   status: SubmissionStatus;
   createdAt: string;
+  updatedAt: string;
 };
 
 type CandidateRow = {
   id: string;
-  ref_no: number | null;
+  ref_no?: number | string | null;
   name: string;
   phone: string;
   email: string;
@@ -82,6 +83,7 @@ type CandidateRow = {
   photo_file: string | null;
   status: string;
   created_at: string;
+  updated_at?: string | null;
 };
 
 /** Format a numeric ref into the public TZ#### code. */
@@ -89,8 +91,24 @@ export function formatRef(refNo: number): string {
   return `TZ${String(refNo).padStart(4, "0")}`;
 }
 
-function toSubmission(r: CandidateRow): Submission {
-  const refNo = r.ref_no ?? 0;
+function candidateRefNo(r: CandidateRow, fallbackRefNo = 0): number {
+  const refNo = Number(r.ref_no);
+  return Number.isInteger(refNo) && refNo > 0 ? refNo : fallbackRefNo;
+}
+
+function fallbackRefNoMap(rows: CandidateRow[]): Map<string, number> {
+  return new Map(
+    [...rows]
+      .sort((a, b) => {
+        const byDate = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        return byDate || a.id.localeCompare(b.id);
+      })
+      .map((row, index) => [row.id, index + 1]),
+  );
+}
+
+function toSubmission(r: CandidateRow, fallbackRefNo = 0): Submission {
+  const refNo = candidateRefNo(r, fallbackRefNo);
   return {
     id: r.id,
     refNo,
@@ -103,11 +121,12 @@ function toSubmission(r: CandidateRow): Submission {
     photoFile: r.photo_file,
     status: (r.status as SubmissionStatus) ?? "new",
     createdAt: r.created_at,
+    updatedAt: r.updated_at ?? r.created_at,
   };
 }
 
 export async function addSubmission(
-  data: Omit<Submission, "id" | "refNo" | "ref" | "status" | "createdAt">,
+  data: Omit<Submission, "id" | "refNo" | "ref" | "status" | "createdAt" | "updatedAt">,
 ): Promise<Submission> {
   const { data: row, error } = await supabaseAdmin()
     .from("candidates")
@@ -123,7 +142,9 @@ export async function addSubmission(
     .select()
     .single();
   check(error);
-  return toSubmission(row as CandidateRow);
+  const candidateRow = row as CandidateRow;
+  if (candidateRefNo(candidateRow) > 0) return toSubmission(candidateRow);
+  return toSubmission(candidateRow, await fallbackRefNoForCandidate(candidateRow.id));
 }
 
 export async function listSubmissions(): Promise<Submission[]> {
@@ -132,13 +153,27 @@ export async function listSubmissions(): Promise<Submission[]> {
     .select("*")
     .order("created_at", { ascending: false });
   check(error);
-  return (data as CandidateRow[]).map(toSubmission);
+  const rows = data as CandidateRow[];
+  const fallbackRefs = fallbackRefNoMap(rows);
+  return rows.map((row) => toSubmission(row, fallbackRefs.get(row.id)));
 }
 
 export async function getSubmission(id: string): Promise<Submission | null> {
   const { data, error } = await supabaseAdmin().from("candidates").select("*").eq("id", id).maybeSingle();
   if (error || !data) return null;
-  return toSubmission(data as CandidateRow);
+  const row = data as CandidateRow;
+  if (candidateRefNo(row) > 0) return toSubmission(row);
+  return toSubmission(row, await fallbackRefNoForCandidate(row.id));
+}
+
+async function fallbackRefNoForCandidate(id: string): Promise<number> {
+  const { data, error } = await supabaseAdmin()
+    .from("candidates")
+    .select("id, created_at")
+    .order("created_at", { ascending: true })
+    .order("id", { ascending: true });
+  if (error || !data) return 0;
+  return fallbackRefNoMap(data as CandidateRow[]).get(id) ?? 0;
 }
 
 export async function deleteSubmission(id: string): Promise<boolean> {
@@ -154,14 +189,36 @@ export async function updateSubmissionStatus(
   id: string,
   status: SubmissionStatus,
 ): Promise<Submission | null> {
-  const { data, error } = await supabaseAdmin()
+  const timestampedUpdate = await supabaseAdmin()
     .from("candidates")
-    .update({ status })
+    .update({ status, updated_at: new Date().toISOString() })
     .eq("id", id)
     .select()
     .single();
+
+  const missingUpdatedAt =
+    timestampedUpdate.error &&
+    /updated_at/i.test(`${timestampedUpdate.error.message} ${timestampedUpdate.error.details ?? ""}`);
+
+  if (missingUpdatedAt) {
+    const fallbackUpdate = await supabaseAdmin()
+      .from("candidates")
+      .update({ status })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (fallbackUpdate.error || !fallbackUpdate.data) return null;
+    const row = fallbackUpdate.data as CandidateRow;
+    if (candidateRefNo(row) > 0) return toSubmission(row);
+    return toSubmission(row, await fallbackRefNoForCandidate(row.id));
+  }
+
+  const { data, error } = timestampedUpdate;
   if (error || !data) return null;
-  return toSubmission(data as CandidateRow);
+  const row = data as CandidateRow;
+  if (candidateRefNo(row) > 0) return toSubmission(row);
+  return toSubmission(row, await fallbackRefNoForCandidate(row.id));
 }
 
 /* ───────────────────────── Contact enquiries ───────────────────────── */

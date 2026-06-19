@@ -43,7 +43,7 @@ export function Header() {
         >
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8">
             <Link href="/" className="group flex items-center gap-2 focus-visible:outline-none">
-              <Logo className="h-8 w-auto transition-transform duration-300 group-hover:scale-105" />
+              <Logo priority className="h-8 w-auto transition-transform duration-300 group-hover:scale-105" />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8">

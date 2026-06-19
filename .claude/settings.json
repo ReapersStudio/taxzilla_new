@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -iE 'move_uploaded|file_get_contents|fopen|INSERT|resume|\\\\$_FILES|blob|uploads/' save_form.php)",
+      "PowerShell($key = \"C:\\\\Users\\\\radeo\\\\Downloads\\\\LightsailDefaultKey-ap-south-1.pem\"; icacls $key /inheritance:r /grant:r \"$\\($env:USERNAME\\):R\" | Out-Null; scp -i $key -o StrictHostKeyChecking=accept-new admin@13.234.45.188:/home/admin/taxzilla_backup.zip \"$env:USERPROFILE\\\\Desktop\\\\taxzilla_backup.zip\"; if \\($?\\) { Get-ChildItem \"$env:USERPROFILE\\\\Desktop\\\\taxzilla_backup.zip\" | Select-Object FullName, Length, LastWriteTime })",
+      "PowerShell($d = \"$env:USERPROFILE\\\\.ssh\"; if \\(-not \\(Test-Path $d\\)\\) { New-Item -ItemType Directory -Path $d | Out-Null }; $kp = \"$d\\\\taxzilla_dl\"; if \\(Test-Path $kp\\) { Remove-Item $kp,\"$kp.pub\" -Force -ErrorAction SilentlyContinue }; ssh-keygen -t ed25519 -f $kp -N '\"\"' -C \"taxzilla-download\" | Out-Null; Get-Content \"$kp.pub\")",
+      "PowerShell($kp = \"$env:USERPROFILE\\\\.ssh\\\\taxzilla_dl\"; Write-Output \"--- empty passphrase test ---\"; ssh-keygen -y -f $kp -P \"\" 2>&1 | Select-Object -First 1)",
+      "PowerShell($kp = \"$env:USERPROFILE\\\\.ssh\\\\taxzilla_dl\"; ssh-keygen -y -f $kp -P '\"\"' 2>&1 | Select-Object -First 1)",
+      "PowerShell(cmd /c 'del \"%USERPROFILE%\\\\.ssh\\\\taxzilla_dl\" \"%USERPROFILE%\\\\.ssh\\\\taxzilla_dl.pub\" 2>nul & ssh-keygen -t ed25519 -f \"%USERPROFILE%\\\\.ssh\\\\taxzilla_dl\" -N \"\" -C taxzilla-download >nul & type \"%USERPROFILE%\\\\.ssh\\\\taxzilla_dl.pub\"')",
+      "PowerShell($kp = \"$env:USERPROFILE\\\\.ssh\\\\taxzilla_dl\"; scp -i $kp -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new admin@13.234.45.188:/home/admin/taxzilla_backup.zip \"$env:USERPROFILE\\\\Desktop\\\\taxzilla_backup.zip\"; if \\($?\\) { Get-ChildItem \"$env:USERPROFILE\\\\Desktop\\\\taxzilla_backup.zip\" | Select-Object FullName, @{N='SizeKB';E={[math]::Round\\($_.Length/1KB\\)}}, LastWriteTime })",
+      "PowerShell($kp = \"$env:USERPROFILE\\\\.ssh\\\\taxzilla_dl\"; scp -i $kp -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new \"f:\\\\real world websites\\\\taxzila_restucture\\\\src\\\\components\\\\forms\\\\NewsletterForm.tsx\" admin@13.234.45.188:/home/admin/taxzilla_website/src/components/forms/NewsletterForm.tsx; if \\($?\\) { Write-Output \"UPLOADED OK\" })",
+      "PowerShell($kp = \"$env:USERPROFILE\\\\.ssh\\\\taxzilla_dl\"; ssh -i $kp -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new admin@13.234.45.188 \"cd /home/admin/taxzilla_website && NODE_OPTIONS=--max-old-space-size=1536 npm run build 2>&1 | tail -20 && pm2 restart taxzilla && sleep 5 && curl -s -o /dev/null -w 'APP: HTTP %{http_code}\\\\n' http://127.0.0.1:3000\")"
+    ]
+  }
+}

@@ -92,25 +92,29 @@ export default function HomePage() {
               <Image
                 src="/logo.png"
                 alt="Taxzilla"
-                width={280}
-                height={70}
+                width={250}
+                height={54}
                 className="h-auto w-50 sm:w-60"
+                style={{ height: "auto" }}
                 priority
               />
             </div>
 
             {/* Headline */}
             <h1
-              className="font-display text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight"
+              className="font-display text-[2.15rem] sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.08] sm:leading-tight"
               style={{ animation: "fade-up 0.8s 0.2s both" }}
             >
-              Excellence in <br className="hidden sm:block" />
-              <span className="text-brand-600">Corporate Compliance</span>
+              Excellence in
+              <span className="block text-brand-600">
+                Corporate <br className="sm:hidden" />
+                Compliance
+              </span>
             </h1>
 
             {/* Sub-text */}
             <p
-              className="mt-6 max-w-2xl text-lg sm:text-xl leading-relaxed text-gray-300 font-medium"
+              className="mt-6 max-w-2xl text-base sm:text-xl leading-relaxed text-gray-300 font-medium"
               style={{ animation: "fade-up 0.8s 0.3s both" }}
             >
               Empowering 1,200+ businesses with precision GST, income tax, and registrations — driven by expert CAs and robust automation.
@@ -139,26 +143,26 @@ export default function HomePage() {
 
             {/* Trust Indicators */}
             <div
-              className="mt-16 grid grid-cols-3 gap-6 border-t border-white/10 pt-8 w-full max-w-3xl"
+              className="mt-14 grid grid-cols-3 divide-x divide-white/10 border-t border-white/10 pt-7 w-full max-w-3xl sm:mt-16 sm:pt-8"
               style={{ animation: "fade-up 0.8s 0.5s both" }}
             >
-              <div>
-                <p className="font-display text-3xl font-bold text-white">
+              <div className="px-1 sm:px-6">
+                <p className="font-display text-2xl sm:text-3xl font-bold text-white">
                   <Counter value="300+" />
                 </p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-accent-500">Happy Clients</p>
+                <p className="mt-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider sm:tracking-widest text-accent-500">Happy Clients</p>
               </div>
-              <div className="border-l border-white/10 pl-6">
-                <p className="font-display text-3xl font-bold text-white">
+              <div className="px-1 sm:px-6">
+                <p className="font-display text-2xl sm:text-3xl font-bold text-white">
                   <Counter value="14+" />
                 </p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-accent-500">Professionals</p>
+                <p className="mt-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider sm:tracking-widest text-accent-500">Professionals</p>
               </div>
-              <div className="border-l border-white/10 pl-6">
-                <p className="font-display text-3xl font-bold text-white">
+              <div className="px-1 sm:px-6">
+                <p className="font-display text-2xl sm:text-3xl font-bold text-white">
                   <Counter value="38+" />
                 </p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-accent-500">Cities Reached</p>
+                <p className="mt-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider sm:tracking-widest text-accent-500">Cities Reached</p>
               </div>
             </div>
 
@@ -249,23 +253,36 @@ export default function HomePage() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
           {services.slice(0, 3).map((service, index) => (
             <Reveal key={service.slug} delay={index * 150}>
-              <div className="group relative overflow-hidden rounded-3xl bg-white shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 border border-ink-100 hover:border-brand-200 p-8">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out z-0">
+              <div className="group relative overflow-hidden rounded-3xl bg-white shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 border border-ink-100 hover:border-brand-200 p-0 sm:p-8">
+                <div className="relative h-44 overflow-hidden sm:hidden">
                   <Image
                     src={service.image}
                     alt={service.title}
                     fill
-                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+                    sizes="92vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-ink-950/55 via-ink-950/10 to-transparent" />
+                  <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-lg">
+                    <CheckCircle2 className="h-6 w-6" />
+                  </div>
+                </div>
+                <div className="absolute inset-0 z-0 hidden opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 sm:block">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-white via-white/60 to-transparent"></div>
                 </div>
-                <div className="relative z-10">
-                  <div className="h-14 w-14 rounded-2xl bg-brand-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform group-hover:bg-brand-100 text-brand-600">
+                <div className="relative z-10 p-6 sm:p-0">
+                  <div className="mb-6 hidden h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-600 transition-transform group-hover:scale-110 group-hover:bg-brand-100 sm:flex">
                     <CheckCircle2 className="h-7 w-7" />
                   </div>
-                  <h3 className="text-xl font-bold text-ink-900 mb-3">{service.title}</h3>
-                  <p className="text-ink-500 text-sm leading-relaxed mb-6">{service.short}</p>
+                  <h3 className="text-lg font-bold text-ink-900 mb-3 sm:text-xl">{service.title}</h3>
+                  <p className="text-ink-500 text-sm leading-relaxed mb-5 sm:mb-6">{service.short}</p>
                   <div className="flex items-center text-brand-600 font-bold text-sm group-hover:text-brand-700">
                     Read more <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -294,71 +311,116 @@ export default function HomePage() {
         </div>
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <Reveal delay={0}>
-            <div className="group relative bg-ink-50 rounded-3xl p-8 border border-ink-100 hover:border-brand-200 transition-colors overflow-hidden">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out z-0">
+            <div className="group relative overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-sm transition-colors hover:border-brand-200 md:bg-ink-50 md:p-8">
+              <div className="relative h-44 overflow-hidden md:hidden">
                 <Image
                   src="/images/4.png"
                   alt="Tax solution support"
                   fill
-                  sizes="(min-width: 768px) 30vw, 92vw"
+                  sizes="92vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-ink-950/55 via-ink-950/10 to-transparent" />
+                <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-lg">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="absolute inset-0 z-0 hidden opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 md:block">
+                <Image
+                  src="/images/4.png"
+                  alt="Tax solution support"
+                  fill
+                  sizes="(min-width: 768px) 30vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-ink-50 via-ink-50/55 to-transparent"></div>
               </div>
-              <div className="relative z-10">
-                <div className="h-14 w-14 rounded-2xl bg-white border border-ink-100 flex items-center justify-center mb-6 text-brand-600 shadow-sm animate-float">
+              <div className="relative z-10 p-6 md:p-0">
+                <div className="mb-6 hidden h-14 w-14 items-center justify-center rounded-2xl border border-ink-100 bg-white text-brand-600 shadow-sm animate-float md:flex">
                   <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-ink-900 mb-3">Quick Response</h3>
-                <p className="text-ink-500 leading-relaxed">We understand that time is precious and crucial. We respond to all your queries quickly.</p>
+                <h3 className="text-lg font-bold text-ink-900 mb-3 md:text-xl">Quick Response</h3>
+                <p className="text-sm leading-relaxed text-ink-500 md:text-base">We understand that time is precious and crucial. We respond to all your queries quickly.</p>
               </div>
             </div>
           </Reveal>
           <Reveal delay={150}>
-            <div className="group relative bg-ink-50 rounded-3xl p-8 border border-ink-100 hover:border-brand-200 transition-colors overflow-hidden">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out z-0">
+            <div className="group relative overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-sm transition-colors hover:border-brand-200 md:bg-ink-50 md:p-8">
+              <div className="relative h-44 overflow-hidden md:hidden">
                 <Image
                   src="/images/5.png"
                   alt="Compliance reminders"
                   fill
-                  sizes="(min-width: 768px) 30vw, 92vw"
+                  sizes="92vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-ink-950/55 via-ink-950/10 to-transparent" />
+                <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-lg">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="absolute inset-0 z-0 hidden opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 md:block">
+                <Image
+                  src="/images/5.png"
+                  alt="Compliance reminders"
+                  fill
+                  sizes="(min-width: 768px) 30vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-ink-50 via-ink-50/55 to-transparent"></div>
               </div>
-              <div className="relative z-10">
-                <div className="h-14 w-14 rounded-2xl bg-white border border-ink-100 flex items-center justify-center mb-6 text-brand-600 shadow-sm animate-float">
+              <div className="relative z-10 p-6 md:p-0">
+                <div className="mb-6 hidden h-14 w-14 items-center justify-center rounded-2xl border border-ink-100 bg-white text-brand-600 shadow-sm animate-float md:flex">
                   <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-ink-900 mb-3">Timely Reminders</h3>
-                <p className="text-ink-500 leading-relaxed">We take care of renewal date reminders for licenses and due date reminders for monthly, quarterly and yearly filing works.</p>
+                <h3 className="text-lg font-bold text-ink-900 mb-3 md:text-xl">Timely Reminders</h3>
+                <p className="text-sm leading-relaxed text-ink-500 md:text-base">We take care of renewal date reminders for licenses and due date reminders for monthly, quarterly and yearly filing works.</p>
               </div>
             </div>
           </Reveal>
           <Reveal delay={300}>
-            <div className="group relative bg-ink-50 rounded-3xl p-8 border border-ink-100 hover:border-brand-200 transition-colors overflow-hidden">
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out z-0">
+            <div className="group relative overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-sm transition-colors hover:border-brand-200 md:bg-ink-50 md:p-8">
+              <div className="relative h-44 overflow-hidden md:hidden">
                 <Image
                   src="/images/6.png"
                   alt="Organised business setup"
                   fill
-                  sizes="(min-width: 768px) 30vw, 92vw"
+                  sizes="92vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-ink-950/55 via-ink-950/10 to-transparent" />
+                <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-lg">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+              </div>
+              <div className="absolute inset-0 z-0 hidden opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 md:block">
+                <Image
+                  src="/images/6.png"
+                  alt="Organised business setup"
+                  fill
+                  sizes="(min-width: 768px) 30vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-ink-50 via-ink-50/55 to-transparent"></div>
               </div>
-              <div className="relative z-10">
-                <div className="h-14 w-14 rounded-2xl bg-white border border-ink-100 flex items-center justify-center mb-6 text-brand-600 shadow-sm animate-float">
+              <div className="relative z-10 p-6 md:p-0">
+                <div className="mb-6 hidden h-14 w-14 items-center justify-center rounded-2xl border border-ink-100 bg-white text-brand-600 shadow-sm animate-float md:flex">
                   <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-ink-900 mb-3">Organised Work Structure</h3>
-                <p className="text-ink-500 leading-relaxed">We follow work processes and process controls, to provide a seamless customer experience.</p>
+                <h3 className="text-lg font-bold text-ink-900 mb-3 md:text-xl">Organised Work Structure</h3>
+                <p className="text-sm leading-relaxed text-ink-500 md:text-base">We follow work processes and process controls, to provide a seamless customer experience.</p>
               </div>
             </div>
           </Reveal>

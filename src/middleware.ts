@@ -40,6 +40,7 @@ function buildCsp(): string {
     `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://maps.gstatic.com https://maps.googleapis.com",
+    "media-src 'self' https://cdn.coverr.co",
     "font-src 'self' data:",
     "connect-src 'self'",
     // Google Maps embed on the contact page.

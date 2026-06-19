@@ -3,22 +3,13 @@ import Link from "next/link";
 import { Users, Mail, Inbox, ArrowRight } from "lucide-react";
 import { listSubmissions, listEnquiries, listSubscribers } from "@/lib/store";
 import { getSession } from "@/lib/auth/session";
+import { formatAdminDateTime } from "@/lib/dates";
 import { StatusBadge } from "./StatusBadge";
 import { SetupNotice } from "./SetupNotice";
 
 export const metadata: Metadata = { title: "Dashboard", robots: { index: false, follow: false } };
 
 export const dynamic = "force-dynamic";
-
-function formatDate(iso: Date | string): string {
-  return new Date(iso).toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -49,13 +40,13 @@ export default async function DashboardPage() {
   const recent = submissions.slice(0, 5);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <div>
         <h1 className="text-2xl font-bold text-ink-900">Dashboard</h1>
         <p className="mt-1 text-ink-500">Overview of activity across the site.</p>
       </div>
 
-      <div className={`mt-6 grid gap-5 ${stats.length > 1 ? "sm:grid-cols-3" : "max-w-xs"}`}>
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map(({ Icon, label, value, href }) => (
           <Link
             key={label}
@@ -105,7 +96,9 @@ export default async function DashboardPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <StatusBadge status={s.status} />
-                  <span className="hidden text-sm text-ink-500 sm:inline">{formatDate(s.createdAt)}</span>
+                  <span className="hidden text-sm text-ink-500 sm:inline">
+                    {formatAdminDateTime(s.createdAt)}
+                  </span>
                 </div>
               </Link>
             ))}

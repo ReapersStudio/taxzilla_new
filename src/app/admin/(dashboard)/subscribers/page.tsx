@@ -2,16 +2,13 @@ import type { Metadata } from "next";
 import { Mail, Trash2 } from "lucide-react";
 import { listSubscribers } from "@/lib/store";
 import { getSession } from "@/lib/auth/session";
+import { formatAdminDate } from "@/lib/dates";
 import { deleteSubscriberAction } from "../candidate-actions";
 import { SetupNotice } from "../SetupNotice";
 import { Forbidden } from "../Forbidden";
 
 export const metadata: Metadata = { title: "Subscribers", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
-
-function fmt(d: string): string {
-  return new Date(d).toLocaleDateString("en-IN", { dateStyle: "medium" });
-}
 
 export default async function SubscribersPage() {
   const session = await getSession();
@@ -26,7 +23,7 @@ export default async function SubscribersPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-ink-900">Newsletter subscribers</h1>
@@ -56,7 +53,7 @@ export default async function SubscribersPage() {
                   <a href={`mailto:${s.email}`} className="font-medium text-ink-900 hover:text-brand-700">
                     {s.email}
                   </a>
-                  <p className="text-xs text-ink-400">Subscribed {fmt(s.createdAt)}</p>
+                  <p className="text-xs text-ink-400">Subscribed {formatAdminDate(s.createdAt)}</p>
                 </div>
                 <form action={deleteSubscriberAction}>
                   <input type="hidden" name="id" value={s.id} />

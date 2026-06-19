@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`no-js ${inter.variable} ${sora.variable}`}>
+    <html lang="en" className={`no-js ${inter.variable} ${sora.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased">
         {/* Flip no-js → js before paint, so scroll-reveal content is only
             hidden when JavaScript is actually running. Prevents a blank page

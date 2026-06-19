@@ -2,16 +2,13 @@ import type { Metadata } from "next";
 import { ShieldAlert, Trash2, UserCog } from "lucide-react";
 import { getSession } from "@/lib/auth/session";
 import { listAdminUsers } from "@/lib/store";
+import { formatAdminDate } from "@/lib/dates";
 import { CreateUserForm } from "./CreateUserForm";
 import { deleteUserAction } from "../user-actions";
 import { SetupNotice } from "../SetupNotice";
 
 export const metadata: Metadata = { title: "Users", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
-
-function fmt(d: string): string {
-  return new Date(d).toLocaleDateString("en-IN", { dateStyle: "medium" });
-}
 
 export default async function UsersPage() {
   const session = await getSession();
@@ -38,7 +35,7 @@ export default async function UsersPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="w-full">
       <div className="flex items-center gap-3">
         <UserCog className="h-6 w-6 text-brand-600" />
         <div>
@@ -87,7 +84,7 @@ export default async function UsersPage() {
                 >
                   {u.role}
                 </span>
-                <p className="text-xs text-ink-400">Added {fmt(u.createdAt)}</p>
+                <p className="text-xs text-ink-400">Added {formatAdminDate(u.createdAt)}</p>
               </div>
               <form action={deleteUserAction}>
                 <input type="hidden" name="id" value={u.id} />

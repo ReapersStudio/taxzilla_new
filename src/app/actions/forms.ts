@@ -17,6 +17,41 @@ import { company } from "@/lib/site";
 
 const GENERIC_ERROR = "Something went wrong. Please try again.";
 
+const ATTACHMENT_CONTENT_TYPES: Record<string, string> = {
+  pdf: "application/pdf",
+  doc: "application/msword",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+};
+
+function attachmentContentType(ext: string): string {
+  return ATTACHMENT_CONTENT_TYPES[ext.toLowerCase()] ?? "application/octet-stream";
+}
+
+function safeAttachmentName(uploadedName: string, fallbackBase: string, ext: string): string {
+  const safeExt = ext.toLowerCase().replace(/[^a-z0-9]/g, "") || "file";
+  const base =
+    uploadedName
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9._-]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 80) || fallbackBase;
+
+  return `${base}.${safeExt}`;
+}
+
+function submissionNameSlug(name: string): string {
+  return (
+    name
+      .trim()
+      .replace(/[^a-zA-Z0-9._-]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 48) || "candidate"
+  );
+}
+
 function honeypotTripped(formData: FormData): boolean {
   return String(formData.get("company_website") ?? "").trim() !== "";
 }
@@ -177,6 +212,8 @@ export async function submitCareer(
 
     const resumeFile = await saveUpload(resumeCheck.buffer, resumeCheck.ext);
     const photoFile = await saveUpload(photoCheck.buffer, photoCheck.ext);
+    const resumeAttachmentName = safeAttachmentName(resume.name, `${submissionNameSlug(d.name)}-resume`, resumeCheck.ext);
+    const photoAttachmentName = safeAttachmentName(photo.name, `${submissionNameSlug(d.name)}-photo`, photoCheck.ext);
 
     const submission = await addSubmission({
       name: d.name,
@@ -204,11 +241,21 @@ export async function submitCareer(
           "Message:",
           d.message || "(none)",
           "",
-          "Resume and photo are attached.",
+          "Attachments:",
+          `- Resume: ${resumeAttachmentName}`,
+          `- Photo:  ${photoAttachmentName}`,
         ].join("\n"),
         attachments: [
-          { filename: `resume.${resumeCheck.ext}`, content: resumeCheck.buffer, contentType: "application/octet-stream" },
-          { filename: `photo.${photoCheck.ext}`, content: photoCheck.buffer, contentType: "application/octet-stream" },
+          {
+            filename: resumeAttachmentName,
+            content: resumeCheck.buffer,
+            contentType: attachmentContentType(resumeCheck.ext),
+          },
+          {
+            filename: photoAttachmentName,
+            content: photoCheck.buffer,
+            contentType: attachmentContentType(photoCheck.ext),
+          },
         ],
       });
     } catch (mailErr) {

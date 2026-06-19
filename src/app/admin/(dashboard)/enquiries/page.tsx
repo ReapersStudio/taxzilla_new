@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inbox, Trash2 } from "lucide-react";
 import { listEnquiries } from "@/lib/store";
 import { getSession } from "@/lib/auth/session";
+import { formatAdminDateTime } from "@/lib/dates";
 import { deleteEnquiryAction } from "../candidate-actions";
 import { SetupNotice } from "../SetupNotice";
 import { Forbidden } from "../Forbidden";
@@ -9,10 +10,6 @@ import { EnquiryModalButton } from "./EnquiryModalButton";
 
 export const metadata: Metadata = { title: "Enquiries", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
-
-function fmt(d: string): string {
-  return new Date(d).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
-}
 
 export default async function EnquiriesPage() {
   const session = await getSession();
@@ -27,7 +24,7 @@ export default async function EnquiriesPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="w-full">
       <h1 className="text-2xl font-bold text-ink-900">Contact enquiries</h1>
       <p className="mt-1 text-ink-500">Messages submitted through the contact form.</p>
 
@@ -53,6 +50,7 @@ export default async function EnquiriesPage() {
               <tbody className="divide-y divide-ink-100">
                 {enquiries.map((e, i) => {
                   const refId = String(enquiries.length - i).padStart(3, "0");
+                  const receivedAt = formatAdminDateTime(e.createdAt);
                   return (
                     <tr key={e.id} className="transition hover:bg-ink-50/60">
                       <td className="px-5 py-4 font-mono font-semibold text-brand-700">{refId}</td>
@@ -70,7 +68,7 @@ export default async function EnquiriesPage() {
                         <a href={`mailto:${e.email}`} className="block hover:text-brand-700">{e.email}</a>
                         <a href={`tel:${e.contact}`} className="text-xs text-ink-400 hover:text-brand-700">{e.contact}</a>
                       </td>
-                      <td className="whitespace-nowrap px-5 py-4 text-ink-500">{fmt(e.createdAt)}</td>
+                      <td className="whitespace-nowrap px-5 py-4 text-ink-500">{receivedAt}</td>
                       <td className="px-5 py-4">
                         <div className="flex items-center justify-end gap-1.5">
                           <EnquiryModalButton
@@ -80,7 +78,7 @@ export default async function EnquiriesPage() {
                             email={e.email}
                             contact={e.contact}
                             message={e.message}
-                            received={fmt(e.createdAt)}
+                            received={receivedAt}
                           />
                           <form action={deleteEnquiryAction}>
                             <input type="hidden" name="id" value={e.id} />

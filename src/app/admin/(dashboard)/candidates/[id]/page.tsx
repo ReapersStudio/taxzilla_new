@@ -4,18 +4,12 @@ import Link from "next/link";
 import { ArrowLeft, Download, Mail, Phone, Trash2 } from "lucide-react";
 import { getSubmission } from "@/lib/store";
 import { getSession } from "@/lib/auth/session";
+import { formatAdminDateTime } from "@/lib/dates";
 import { StatusBadge } from "../../StatusBadge";
 import { deleteCandidate } from "../../candidate-actions";
 
 export const metadata: Metadata = { title: "Candidate", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
-
-function formatDate(iso: Date | string): string {
-  return new Date(iso).toLocaleString("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
 
 export default async function CandidatePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -37,7 +31,12 @@ export default async function CandidatePage({ params }: { params: Promise<{ id: 
           <div>
             <span className="font-mono text-sm font-semibold text-brand-600">{candidate.ref}</span>
             <h1 className="mt-1 text-2xl font-bold text-ink-900">{candidate.name}</h1>
-            <p className="mt-1 text-sm text-ink-500">Applied {formatDate(candidate.createdAt)}</p>
+            <p className="mt-1 text-sm text-ink-500">
+              Applied {formatAdminDateTime(candidate.createdAt)}
+            </p>
+            <p className="mt-1 text-sm text-ink-500">
+              Last updated {formatAdminDateTime(candidate.updatedAt)}
+            </p>
           </div>
           <StatusBadge status={candidate.status} />
         </div>
